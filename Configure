@@ -13,7 +13,7 @@
 #		* this copyright notice is not modified or removed from any
 #		  source file
 #
-# $Id: Configure,v 1.22 1992/08/22 16:27:13 cpcahil Exp $
+# $Id: Configure,v 1.23 1995/11/19 21:17:23 tom Exp $
 #
 # This shell script attempts to automatically determine the correct settings
 # for the malloc library include file and compile pre-defines.  This script has
@@ -41,6 +41,10 @@
 #
 # If you run this script in a different environment it may not work correctly or
 # it may make an incorrect determination, so be more cautious about the results.
+#
+# Modified by T.Dickey (dickey@clark.net) 1995/11/19 to add tests for b*
+#	functions and special __const hack to configure with gcc 2.7.0
+#
 #
 SP="           "
 CCFILE=CF$$c
@@ -137,6 +141,13 @@ else
 					if [ $compiler = "gcc" ]; then
 						echo $dir/$compiler \
 						  -traditional >> ${TMPCOMP}
+						$dir/$compiler -DCONSTTEST -DCONST=__const -c cctest.c > ${TMPCC} 2>&1
+						cc_result=$?
+						if [ $cc_result = 0 ]; then
+							gcc_const=__const
+						else
+							gcc_const=
+						fi
 					fi
 					
 					break
@@ -340,6 +351,17 @@ else
 			const=const
 		else
 			const=
+		fi
+
+		#
+		# check for "gcc -traditional", which objects to changing
+		# gcc's non-standard '__const' keyword for builtin functions.
+		#
+		if [ "$gcc_const" != "" ]; then
+			tstcc=`echo $cc|sed -e s/-traditional//`
+			if [ "$tstcc" != "$cc" ]; then
+				const="$gcc_const"
+			fi
 		fi
 
 		echo "#define CONST $const" >> ${TMPSET}
@@ -765,6 +787,87 @@ else
 		fi
 
 		cat < ${TMPDEF} >> ${TMPSET}
+		rm -f ${TMPDEF}
+
+		# Test: bcopy/bzero/bcmp
+		#
+		# for each include file we are checking
+		#
+		for fileinc in -DUSE_STRING_H
+		do
+			if [ $debug -ge 1 ]; then
+				echo "${DSP}checking inc: $fileinc"
+				ODSP="${DSP}"
+				DSP="${DSP}    "
+			fi
+			for datatype in char void
+			do
+				for sizetype in int size_t "unsigned int" long "unsigned long"
+				do
+					if [ $debug -ge 3 ]; then
+						echo "${DSP}data:$datatype size:$sizetype"
+					fi
+
+					#
+					# compile the test module
+					#
+					$cc -DBCOPYDATA="$datatype" \
+						-DBCOPYSIZE="$sizetype" \
+						-DVOIDTYPE=$voidtype \
+						-DCONST="$const" \
+						-DBIN_COMPILETEST  \
+						$fileinc -c cctest.c >${TMPCC} 2>&1
+					result=$?
+					if [ $debug -gt 10 ]; then
+						cat ${TMPCC}
+					fi
+					if [ $result = 0 ]; then
+						egrep "${WARN_REGEXP}" ${TMPCC} > /dev/null 2>&1
+						if [ $? != 0 ]; then
+							echo "#define BCOPYDATA $datatype" >> ${TMPDEF}
+							echo "#define BCOPYSIZE $sizetype" >> ${TMPDEF}
+							break
+						fi
+					fi
+
+				done
+
+				if [ -s ${TMPDEF} ]; then
+					break
+				fi
+			done
+
+			if [ $debug -ge 1 ]; then
+				DSP="${ODSP}"
+			fi
+
+			if [ -s ${TMPDEF} ]; then
+				break;
+			fi
+
+		done
+
+		if [ ! -s ${TMPDEF} ]; then
+			#
+			# use historical settings for defaults
+			#
+			datatype=char
+			sizetype="int"
+
+			echo "${SP}Couldn't determine the correct settings for the datatype"
+			echo "${SP}  and sizetype parameters for b* functions, I will"
+			echo "${SP}  guess that the datatype is $datatype and sizetype"
+			echo "${SP}  is $sizetype"
+
+			#
+			# put the guesses into the tmpdef file and flag them as a guess
+			#
+			echo "#define BCOPYDATA $datatype  /* *GUESS* */" >> ${TMPDEF}
+			echo "#define BCOPYSIZE $sizetype  /* *GUESS* */" >> ${TMPDEF}
+		fi
+
+		cat < ${TMPDEF} >> ${TMPSET}
+		rm -f ${TMPDEF}
 
 		#
 		# check memory comparison setting
@@ -774,7 +877,6 @@ else
 			echo "${DSP}Checking memory func comparision type"
 			DSP="${DSP}    "
 		fi
-		rm -f ${TMPDEF}
 		for comptype in "char" "unsigned char" "signed char"
 		do
 			if [ "x$comptype" = "xchar" ]; then
@@ -819,11 +921,11 @@ else
 		fi
 
 		cat < ${TMPDEF} >> ${TMPSET}
+		rm -f ${TMPDEF}
 
 		#
 		# check settings for string functions
 		#
-		rm -f ${TMPDEF}
 		for sizetype in size_t int "unsigned int" long "unsigned long"
 		do
 			#
@@ -866,11 +968,11 @@ else
 		fi
 
 		cat < ${TMPDEF} >> ${TMPSET}
+		rm -f ${TMPDEF}
 
 		#
 		# check string comparison setting
 		#
-		rm -f ${TMPDEF}
 		for comptype in "char" "unsigned char" "signed char"
 		do
 			if [ "x$comptype" = "xchar" ]; then
@@ -915,19 +1017,23 @@ else
 		fi
 
 		cat < ${TMPDEF} >> ${TMPSET}
+		rm -f ${TMPDEF}
 		
 		#
 		# check settings for write size
 		#
-		rm -f ${TMPDEF}
+		DONE=n
 		for fileinc in -DUSE_SYSENT -DUSE_NONE
 		do
+		    for writetype in void char
+		    do
 			for sizetype in size_t "unsigned int" int long "unsigned long"
 			do
 				#
 				# compile the test module
 				#
 				$cc -DWRTSIZE="$sizetype"   $fileinc -DCONST="$const" \
+					-DWRTDATA="$writetype" \
 					${USE_UNISTD} ${USE_STDLIB} \
 				    -DWRT_COMPILETEST  -c cctest.c >${TMPCC} 2>&1
 				
@@ -935,12 +1041,17 @@ else
 					if egrep "${WARN_REGEXP}" ${TMPCC} >/dev/null; then
 						rm ${TMPCC};
 					else
-						echo "#define WRTSIZE $sizetype" > ${TMPDEF}
+						echo "#define WRTDATA $writetype" > ${TMPDEF}
+						echo "#define WRTSIZE $sizetype" >> ${TMPDEF}
+						DONE=y
 						break
 					fi
 				fi
 
 			done
+			if [ $DONE = y ]; then break; fi
+		    done
+		    if [ $DONE = y ]; then break; fi
 		done
 		
 		if [ ! -s ${TMPDEF} ]; then
@@ -948,19 +1059,22 @@ else
 			# if we don't know, then guess the natural character type
 			# (which may be signed or unsigned)
 			#
-			sizetype="$dfltsize"
+			wrttype=char
+			siztype="$dfltsize"
 
 			echo "${SP}Couldn't determine the correct settings for the"
 			echo "${SP}  sizetype parameter for the write func, I will guess"
-			echo "${SP}  that the sizetype is $sizetype"
+			echo "${SP}  that the sizetype is $siztype"
 
 			#
 			# put the guesses into the tmpdef file and flag them as a guess
 			#
+			echo "#define WRTDATA $wrttype  /* *GUESS* */" >  ${TMPDEF}
 			echo "#define WRTSIZE $siztype  /* *GUESS* */" >  ${TMPDEF}
 		fi
 
 		cat < ${TMPDEF} >> ${TMPSET}.s
+		rm -f ${TMPDEF}
 
 		#
 		# now that we have the settings determined, lets see if we have
@@ -1155,8 +1269,8 @@ cp ${CONFFILE}.s sysdefs.h
 if [ ! -s ${CONFFILE}.O ]; then
 
 	#
-	# find compiler for testing modified modules Note that we only use cc
-	# or gcc for this step because we think that these are the only usefull
+	# find compiler for testing modified modules.  Note that we only use cc
+	# or gcc for this step because we think that these are the only useful
 	# compilers to perform this step
 	#
 	rm -f ${TMPCC}

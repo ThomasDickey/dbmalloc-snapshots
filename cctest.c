@@ -10,6 +10,9 @@
  *		  a minimal charge for the copying or distribution effort)
  *		* this copyright notice is not modified or removed from any
  *		  source file
+ *
+ * modified by T.Dickey (dickey@clark.net) 1995/11/19 to add test for b*
+ *		functions, and to make some tests work properly with gcc 2.7.0
  */
 #if __STDC__ || __cplusplus
 # define __stdcargs(s) s
@@ -38,7 +41,7 @@
 
 
 /*
- * $Id: cctest.c,v 1.12 1992/08/22 16:27:13 cpcahil Exp $
+ * $Id: cctest.c,v 1.13 1995/11/19 21:02:34 tom Exp $
  */
 /*
  * This file is not a real source file for the malloc library.  The
@@ -233,7 +236,7 @@ main(argc,argv)
 
 #ifdef CONSTTEST
 	/*
-	 * testing to see if the void datatype is used by this system
+	 * testing to see if the const datatype is used by this system
 	 */
 	const char *
 	function()
@@ -267,6 +270,7 @@ malloc( size)
 #ifdef FREE_COMPILETEST
 
 #if __cplusplus
+#include <stdio.h>
 FREETYPE free( DATATYPE *data)
 #else
 FREETYPE
@@ -315,6 +319,34 @@ memccpy(ptr1,ptr2,ch,len)
 
 #endif /* MEM_COMPILETEST */
 
+#ifdef BIN_COMPILETEST
+/*
+ * gcc 2.7.0 prototypes bcopy/bzero/bcmp in an unconventional manner.  This
+ * 'bcopy()' call is designed to separate the definition of BCOPYSIZE from
+ * MEMSIZE.
+ */
+#if __cplusplus
+VOIDTYPE bcopy(
+	CONST BCOPYDATA	* ptr1,
+	BCOPYDATA	* ptr2,
+	BCOPYSIZE	  len )
+#else
+VOIDTYPE
+bcopy(ptr1,ptr2,len)
+	CONST BCOPYDATA	* ptr1;
+	BCOPYDATA	* ptr2;
+	BCOPYSIZE	  len;
+#endif
+{
+	if( (ptr1 == ptr2) || (0 != len) )
+	{
+		return;
+	}
+	*((char *)ptr2) = 0;
+}
+
+#endif /* BIN_COMPILETEST */
+
 #ifdef STR_COMPILETEST
 
 #include <string.h>
@@ -342,11 +374,12 @@ int write(int fd, CONST char * buf, WRTSIZE size)
 int
 write(fd,buf,size)
 	 int		  fd;
-	 CONST char	* buf;
+	 CONST WRTDATA	* buf;
 	 WRTSIZE	  size;
 #endif
 {
-	if( buf[fd] == (CONST char) size)
+	char *foo = (char *)buf;
+	if( foo[fd] == (char) size)
 	{
 		return(1);
 	}

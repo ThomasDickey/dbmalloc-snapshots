@@ -4,6 +4,8 @@
 #
 #	Modified for Linux by Harald Dunkel 
 #				(hari@pool.informatik.rwth-aachen.de)
+#	Updated auto-config script, changed install-name - T.Dickey
+#				(dickey@clark.net)
 # 
 #  This software may be distributed freely as long as the following conditions
 #  are met:
@@ -16,7 +18,7 @@
 # 		  source file
 #
 #
-# $Id: Makefile,v 1.40 1993/03/01 10:18:56 dunkel Exp $
+# $Id: Makefile,v 1.41 1995/11/19 21:46:36 tom Exp $
 #
 # This is the Makefile for the malloc debugging library
 #
@@ -69,6 +71,12 @@
 #	settings and you could have a problem if you attempt to use the file
 #	in a compile session that doesn't include these flags.
 #
+# The name by which we'll install.  Originally this package was installed as
+# 'malloc', however a number of vendors distribute systems with malloc.h and
+# libmalloc.a which are NOT related to this package.  It makes more sense to
+# install it as dbmalloc.
+THIS=dbmalloc
+#
 CFLAGS=-g -O -DEXITFUN=_exit
 #
 # Where the code will be installed. The subdirectories should exist.
@@ -83,12 +91,12 @@ CFLAGS=-g -O -DEXITFUN=_exit
 #			source and malloc.man for pre-formatted)
 #
 DESTDIR=
-INSTDIR=$(DESTDIR)/usr
+INSTDIR=$(DESTDIR)/usr/local
 LIBINSTDIR=$(INSTDIR)/lib
-INCINSTDIR=$(INSTDIR)/debug_include
+INCINSTDIR=$(INSTDIR)/include
 MANINSTDIR=$(INSTDIR)/man/man3
 RANLIB=/usr/local/bin/ranlib
-MANINSTNAME=dbmalloc.3
+MANINSTNAME=$(THIS).3
 MANINSTVER=malloc.3
 
 #
@@ -104,7 +112,7 @@ NROFF=nroff
 SHARCMD=makekit -p -m -nmallocshar.
 SHELL=/bin/sh
 
-LIB=libdbmalloc.a
+LIB=lib$(THIS).a
 LINTLIB=llib-ldbmal.ln
 
 #
@@ -174,13 +182,13 @@ TESTS=testmalloc testmem testerr teststack
 
 all:	$(LIB)
 
-install: $(LIBINSTDIR)/$(LIB) $(INCINSTDIR)/malloc.h \
+install: $(LIBINSTDIR)/$(LIB) $(INCINSTDIR)/$(THIS).h \
 	$(MANINSTDIR)/$(MANINSTNAME)
 
 frcinstall: rminstall install
 
 rminstall:
-	rm -f $(LIBINSTDIR)/$(LIB) $(INCINSTDIR)/malloc.h \
+	rm -f $(LIBINSTDIR)/$(LIB) $(INCINSTDIR)/$(THIS).h \
 	$(MANINSTDIR)/$(MANINSTNAME)
 
 $(LIBINSTDIR)/$(LIB): $(LIB)
@@ -194,7 +202,7 @@ $(LIBINSTDIR)/$(LIB): $(LIB)
 	-chmod 644 $@
 	-rm -f $@.old
 
-$(INCINSTDIR)/malloc.h: malloc.h
+$(INCINSTDIR)/$(THIS).h: malloc.h
 	-rm -f $@.old
 	-mv -f $@ $@.old
 	cp $? $@
@@ -224,11 +232,11 @@ runtests: tests
 
 clean:  
 	rm -f $(TESTS) pgm cctest $(LIB) *.o *.ln Runtests.out
-#	rm -f malloc.h sysdefs.h
+	rm -f malloc.h sysdefs.h
 
-#fullclean: clean
-#	rm -f .configure .configure.[sO] *.O core cscope.out tags
-#	rm -f malloc.h sysdefs.h *~
+fullclean: clean
+	rm -f .configure .configure.[sO] *.O core cscope.out tags
+	rm -f malloc.h sysdefs.h *~
 
 sharfile: $(SRCFILES) CHECKSUMS
 	$(SHARCMD)
@@ -253,11 +261,11 @@ $(LIB): $(LIBOBJS)
 $(LINTLIB): $(LIBSRCS)
 	$(LINT) -x -v -o dbmal $(LIBSRCS)
 
-#malloc.h: malloc.h.org Configure
-#	./Configure 
+malloc.h: malloc.h.org Configure
+	./Configure 
 
-#sysdefs.h: Configure
-#	./Configure 
+sysdefs.h: Configure
+	./Configure 
 
 #
 # stuff for building the nroffed version of the manual page
@@ -303,7 +311,7 @@ prototypes.h: $(LIBSRCS) $(HDRS) malloc.h
 	-rm -f prototypes.h
 	cp /dev/null prototypes.h
 	$(CPROTO) -Dforce_cproto_to_use_defines -D__STDC__ \
-		 -DDONT_USE_ASM -m__stdcargs -f4 $(LIBSRCS) \
+		 -DDONT_USE_ASM -mM__stdcargs -f3 $(LIBSRCS) \
 		 | sed -e "s/const/CONST/g" > prototypes.new
 	mv prototypes.new prototypes.h
 	chmod -w prototypes.h
