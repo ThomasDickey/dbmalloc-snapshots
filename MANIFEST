@@ -1,7 +1,8 @@
-MANIFEST for dbmalloc, version t19920822
+MANIFEST for dbmalloc, version t19920903
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 Buildpatch                      Shell to build patch file
+CHANGES                         List of changes
 Config.flags                    Auto config compiler flags
 Configure                       Automatic configuration script
 Makefile                        makefile for dbmalloc
@@ -19,11 +20,14 @@ m_init.c                        malloclib initializations
 m_perror.c                      malloc error printer
 malign.c                        memory alignment routines
 malloc.3                        malloc man page ([nt]roff source)
+malloc.c                        malloc and related functions
 malloc.h.org                    include file for programs using the library
+mallocin.h                      internal header file
 mallopt.c                       mallopt and related stuff
 mchain.c                        chain checking modules
 mcheck.c                        error checking modules
 memory.c                        mem* and b* functions
+realloc.c                       realloc and related functions
 size.c                          malloc_size module
 stack.c                         Stack maintenance functions
 string.c                        str* functions
