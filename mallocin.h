@@ -12,7 +12,7 @@
  *		  source file
  */
 /*
- * $Id: mallocin.h,v 1.27 1992/09/03 22:24:33 cpcahil Exp $
+ * $Id: mallocin.h,v 1.28 1993/02/26 15:07:33 dunkel Exp $
  */
 #ifndef _MALLOCIN_H
 #define _MALLOCIN_H 1
@@ -52,6 +52,16 @@ struct stack
 	CONST char	* file;
 	int		  line;
 };
+
+/*
+ *	exit function. If your exit() or atexit() calls malloc or some 
+ *	of the related functions you should edit Makefile to set 
+ *	EXITFUN to _exit. If your _exit() calls one of the debugging 
+ *	malloc functions too you should get another operating system.
+ */
+#ifndef EXITFUN
+#define EXITFUN exit
+#endif
 
 /*
  * minimum round up to get to a doubleword boundry, assuming it is the
@@ -220,7 +230,7 @@ struct mlist
 				} \
 			}
 
-EXITTYPE	  exit __STDCARGS((int));
+EXITTYPE	  EXITFUN __STDCARGS((int));
 char		* getenv __STDCARGS((CONST char *));
 DATATYPE	* sbrk __STDCARGS((int));
 
@@ -268,8 +278,8 @@ extern int		  malloc_warn_level;
 
 /*
  * $Log: mallocin.h,v $
- * Revision 1.27  1992/09/03 22:24:33  cpcahil
- * FROM_KEYS
+ * Revision 1.28  1993/02/26 15:07:33  dunkel
+ * added definition for EXITFUN
  *
  * Revision 1.27  1992/09/03  22:24:33  cpcahil
  * final changes for PL14

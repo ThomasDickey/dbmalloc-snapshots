@@ -18,7 +18,7 @@
 
 #ifndef lint
 static
-char rcs_hdr[] = "$Id: dump.c,v 1.20 1992/08/22 16:27:13 cpcahil Exp $";
+char rcs_hdr[] = "$Id: dump.c,v 1.21 1993/02/26 15:00:55 dunkel Exp $";
 #endif
 
 /*
@@ -29,7 +29,7 @@ char rcs_hdr[] = "$Id: dump.c,v 1.20 1992/08/22 16:27:13 cpcahil Exp $";
 				{ \
 					VOIDCAST write(2,ERRSTR,\
 						     (WRTSIZE)strlen(ERRSTR));\
-					exit(120); \
+					EXITFUN(120); \
 				}
 
 #define DETAIL_NONE 		0
@@ -383,8 +383,8 @@ malloc_list_items(fd,list_type,histid1,histid2)
 
 /*
  * $Log: dump.c,v $
- * Revision 1.20  1992/08/22 16:27:13  cpcahil
- * FROM_KEYS
+ * Revision 1.21  1993/02/26 15:00:55  dunkel
+ * use EXITFUN instead of exit
  *
  * Revision 1.20  1992/08/22  16:27:13  cpcahil
  * final changes for pl14

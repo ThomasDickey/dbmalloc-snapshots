@@ -36,7 +36,7 @@
 #include "debug.h"
 
 #ifndef lint
-static char rcs_hdr[] = "$Id: malloc.c,v 1.43 1992/09/03 22:24:33 cpcahil Exp $";
+static char rcs_hdr[] = "$Id: malloc.c,v 1.44 1993/02/26 15:06:09 dunkel Exp $";
 #endif
 
 int		  in_malloc_code;
@@ -89,6 +89,9 @@ int		  malloc_warn_level;
  * Narrative:
  *
  */
+#ifdef malloc
+#undef malloc
+#endif
 DATATYPE *
 malloc(size)
 	SIZETYPE	  size;
@@ -866,7 +869,7 @@ malloc_fatal(funcname,file,line,mptr)
 	if( write(malloc_errfd,errbuf,(WRTSIZE)(s-errbuf)) != (s-errbuf))
 	{
 		VOIDCAST write(2,"I/O error to error file\n",(WRTSIZE)24);
-		exit(110);
+		EXITFUN(110);
 	}
 
 	/*
@@ -951,7 +954,7 @@ malloc_warning(funcname,file,line,mptr)
 	if( write(malloc_errfd,errbuf,(WRTSIZE)(s-errbuf)) != (s-errbuf))
 	{
 		VOIDCAST write(2,"I/O error to error file\n",(WRTSIZE)24);
-		exit(110);
+		EXITFUN(110);
 	}
 
 	/*
@@ -1111,7 +1114,7 @@ malloc_dump_info_block(mptr,id)
 		{
 			VOIDCAST write(2,"I/O error to error file\n",
 					(WRTSIZE)24);
-			exit(110);
+			EXITFUN(110);
 		}
 
 		StackDump(malloc_errfd, "\tStack from where allocated:\n",
@@ -1167,7 +1170,7 @@ malloc_dump_info_block(mptr,id)
 			{
 				VOIDCAST write(2,"I/O error to error file\n",
 					(WRTSIZE)24);
-				exit(110);
+				EXITFUN(110);
 			}
 
 			StackDump(malloc_errfd, "\tStack from where freed:\n",
@@ -1188,7 +1191,7 @@ malloc_dump_info_block(mptr,id)
 	if( write(malloc_errfd,errbuf,(WRTSIZE)(s-errbuf)) != (s-errbuf))
 	{
 		VOIDCAST write(2,"I/O error to error file\n", (WRTSIZE)24);
-		exit(110);
+		EXITFUN(110);
 	}
 
 	/*
@@ -1253,14 +1256,14 @@ malloc_err_handler(level)
 			/*
 		 	 * and if we are still here, just exit.
 			 */
-			exit(201);
+			EXITFUN(201);
 			break;
 
 		/*
 		 * If we are to exit..
 		 */
 		case M_HANDLE_EXIT:
-			exit(200);
+			EXITFUN(200);
 			break;
 
 		/*
@@ -1291,7 +1294,7 @@ malloc_err_handler(level)
 					 * if the abort doesn't cause us to
 					 * die, then we may as well just exit
 					 */
-					exit(201);
+					EXITFUN(201);
 				}
 
 				/*
@@ -1582,8 +1585,8 @@ InitMlist(mptr,type)
 
 /*
  * $Log: malloc.c,v $
- * Revision 1.43  1992/09/03 22:24:33  cpcahil
- * FROM_KEYS
+ * Revision 1.44  1993/02/26 15:06:09  dunkel
+ * use EXITFUN instead of exit
  *
  * Revision 1.43  1992/09/03  22:24:33  cpcahil
  * final changes for PL14
