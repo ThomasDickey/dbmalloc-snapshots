@@ -39,14 +39,15 @@
 /*
  * Use Underscores for ASM global symbols
  */
-#define USE_UNDERSCORE 1
+/* #define USE_UNDERSCORE 1 */
 
 /*
  * Use REPE instruction for ASM repeat op
  */
 /*#define USE_REPE 1*/
 
-#define WRTSIZE  unsigned int
+#define WRTDATA void
+#define WRTSIZE size_t
 
 #else  /* (__GNUC__ == 2) && __STDC__ */
 
@@ -69,20 +70,26 @@
 #define POSIX_HEADERS 1
 
 /*
+ * ANSI header files are available
+ */
+#define ANSI_HEADERS 1
+
+/*
  * ASM settings that only apply to 80x86 systems 
  */
 
 /*
  * Use Underscores for ASM global symbols
  */
-#define USE_UNDERSCORE 1
+/* #define USE_UNDERSCORE 1 */
 
 /*
  * Use REPE instruction for ASM repeat op
  */
 /*#define USE_REPE 1*/
 
-#define WRTSIZE  unsigned int
+#define WRTDATA char
+#define WRTSIZE size_t
 
 #else  /* (__GNUC__ == 2) */
 
@@ -101,14 +108,15 @@
 /*
  * Use Underscores for ASM global symbols
  */
-#define USE_UNDERSCORE 1
+/* #define USE_UNDERSCORE 1 */
 
 /*
  * Use REPE instruction for ASM repeat op
  */
 /*#define USE_REPE 1*/
 
-#define WRTSIZE unsigned int
+#define WRTDATA void
+#define WRTSIZE size_t
 
 #else  /* (__GNUC__ == 2) && __STDC__ && __cplusplus */
 
@@ -142,14 +150,15 @@
 /*
  * Use Underscores for ASM global symbols
  */
-#define USE_UNDERSCORE 1
+/* #define USE_UNDERSCORE 1 */
 
 /*
  * Use REPE instruction for ASM repeat op
  */
 /*#define USE_REPE 1*/
 
-#define WRTSIZE unsigned int
+#define WRTDATA void
+#define WRTSIZE size_t
 
 #endif /* (__GNUC__ == 2) && __STDC__ */
 
@@ -171,6 +180,11 @@
  * Found wait.h in /usr/include/sys
  */
 #define NEED_WAIT 1
+
+/*
+ * don't force inclusion of XtHeap
+ */
+#define DONT_FORCE_HEAPSTUFF 1
 
 
 #endif  /* _SYSDEF_H */

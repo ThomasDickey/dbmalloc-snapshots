@@ -10,20 +10,16 @@
  *		  a minimal charge for the copying or distribution effort)
  *		* this copyright notice is not modified or removed from any
  *		  source file
+ *
+ * modified by T.Dickey (dickey@clark.net) 1995/11/19 to correct declarations
+ *		of the b* functions
  */
 /*
- * $Id: malloc.h,v 1.1 1993/02/26 11:42:34 dunkel Exp $
+ * $Id: malloc.h,v 1.2 1995/11/19 22:14:39 tom Exp $
  */
 
 #ifndef _DEBUG_MALLOC_INC
 #define _DEBUG_MALLOC_INC 1
-
-/*
- *	__need_size_t is checked by Gnu's stddef.h
- */
-#define __need_size_t
-#include <stddef.h>
-#undef  __need_size_t
 
 #ifdef    force_cproto_to_use_defines
 
@@ -33,19 +29,17 @@
  * would have the contents of the define, not the define itself
  */
 
-typedef void		DATATYPE;
-typedef size_t		SIZETYPE;
+typedef char		DATATYPE;
+typedef int		SIZETYPE;
 typedef void		VOIDTYPE;
-typedef void		MEMDATA;
-typedef size_t		MEMSIZE;
+typedef char		MEMDATA;
+typedef int		MEMSIZE;
 typedef int		BCOPYSIZE;
-typedef size_t		STRSIZE;
-typedef void		FREETYPE;
-typedef void		EXITTYPE;
+typedef int		STRSIZE;
+typedef int		FREETYPE;
+typedef int		EXITTYPE;
 
-#ifdef WRTSIZE
 #undef WRTSIZE
-#endif
 typedef unsigned int	WRTSIZE;
 
 /*
@@ -63,6 +57,8 @@ typedef unsigned int	WRTSIZE;
  * a description of your system and the correct values
  */
 
+
+
 #if       (__GNUC__ == 2) && __STDC__
 
 #define VOIDTYPE void
@@ -73,6 +69,7 @@ typedef unsigned int	WRTSIZE;
 #define FREETYPE void
 #define MEMDATA void
 #define MEMSIZE size_t
+#define BCOPYDATA void
 #define BCOPYSIZE int
 #define MEMCMPTYPE unsigned char
 #define STRSIZE size_t
@@ -84,13 +81,14 @@ typedef unsigned int	WRTSIZE;
 #if       (__GNUC__ == 2)
 
 #define VOIDTYPE void
-#define CONST 
+#define CONST __const
 #define EXITTYPE void
 #define DATATYPE void
-#define SIZETYPE size_t
+#define SIZETYPE int
 #define FREETYPE void
-#define MEMDATA void
+#define MEMDATA char
 #define MEMSIZE size_t
+#define BCOPYDATA char
 #define BCOPYSIZE int
 #define MEMCMPTYPE unsigned char
 #define STRSIZE size_t
@@ -105,10 +103,11 @@ typedef unsigned int	WRTSIZE;
 #define CONST const
 #define EXITTYPE void
 #define DATATYPE void
-#define SIZETYPE size_t
+#define SIZETYPE int
 #define FREETYPE void
 #define MEMDATA void
 #define MEMSIZE size_t
+#define BCOPYDATA char
 #define BCOPYSIZE int
 #define MEMCMPTYPE unsigned char
 #define STRSIZE size_t
@@ -127,6 +126,7 @@ typedef unsigned int	WRTSIZE;
 #define FREETYPE void
 #define MEMDATA void
 #define MEMSIZE size_t
+#define BCOPYDATA void
 #define BCOPYSIZE int
 #define MEMCMPTYPE unsigned char
 #define STRSIZE size_t
@@ -236,9 +236,6 @@ typedef unsigned int	WRTSIZE;
 #endif
 #ifndef __memory_h__
 #define __memory_h__		1
-#endif
-#ifndef _STDLIB_H
-#define _STDLIB_H		1
 #endif
 
 /*
@@ -373,10 +370,10 @@ int		  DBmemcmp __STDCARGS((CONST char *file, int line,
 					CONST MEMDATA  *ptr2, MEMSIZE len));
 MEMDATA 	* DBmemset __STDCARGS((CONST char *file, int line,
 					MEMDATA  *ptr1, int ch, MEMSIZE len));
-VOIDTYPE 	DBbcopy __STDCARGS((CONST char *file, int line,
+VOIDTYPE 	  DBbcopy __STDCARGS((CONST char *file, int line,
 					CONST MEMDATA  *ptr2, MEMDATA  *ptr1,
 					BCOPYSIZE len));
-VOIDTYPE  	DBbzero __STDCARGS((CONST char *file, int line,
+VOIDTYPE  	  DBbzero __STDCARGS((CONST char *file, int line,
 					MEMDATA  *ptr1, BCOPYSIZE len));
 int		  DBbcmp __STDCARGS((CONST char *file, int line,
 					CONST MEMDATA  *ptr2,
@@ -443,26 +440,17 @@ char		* DBstrtok __STDCARGS((CONST char *file, int line, char *str1,
 /*
  * allocation functions
  */
-#ifdef malloc
-#undef malloc
-#endif
-#ifdef realloc
-#undef realloc
-#endif
-#ifdef calloc
-#undef calloc
-#endif
-#ifdef cfree
-#undef cfree
-#endif
-#ifdef free
-#undef free
-#endif
+#undef  malloc
 #define malloc(len)		debug_malloc( __FILE__,__LINE__, (len))
+#undef  realloc
 #define realloc(ptr,len)	debug_realloc(__FILE__,__LINE__, (ptr), (len))
+#undef  calloc
 #define calloc(numelem,size)	debug_calloc(__FILE__,__LINE__,(numelem),(size))
+#undef  cfree
 #define cfree(ptr)		debug_cfree(__FILE__,__LINE__,(ptr))
+#undef  free
 #define free(ptr)		debug_free(__FILE__,__LINE__,(ptr))
+
 #define malloc_chain_check(do)  DBmalloc_chain_check(__FILE__,__LINE__,(do))
 #define malloc_mark(ptr)	DBmalloc_mark(__FILE__,__LINE__,(ptr))
 #define malloc_inuse(histptr)	DBmalloc_inuse(__FILE__,__LINE__,(histptr))
@@ -489,23 +477,23 @@ char		* DBstrtok __STDCARGS((CONST char *file, int line, char *str1,
 /*
  * memory(3) related functions
  */
-#ifdef bcopy
-#undef bcopy
-#endif
-#ifdef bzero
-#undef bzero
-#endif
-#ifdef bcmp
-#undef bcmp
-#endif
+#undef  memccpy
 #define memccpy(ptr1,ptr2,ch,len) DBmemccpy(__FILE__,__LINE__,ptr1,ptr2,ch,len)
+#undef  memchr
 #define memchr(ptr1,ch,len)	  DBmemchr(__FILE__,__LINE__,ptr1,ch,len)
+#undef  memmove
 #define memmove(ptr1,ptr2,len)    DBmemmove(__FILE__,__LINE__,ptr1, ptr2, len)
+#undef  memcpy
 #define memcpy(ptr1,ptr2,len)     DBmemcpy(__FILE__, __LINE__, ptr1, ptr2, len)
+#undef  memcmp
 #define memcmp(ptr1,ptr2,len)     DBmemcmp(__FILE__,__LINE__,ptr1, ptr2, len)
+#undef  memset
 #define memset(ptr1,ch,len)       DBmemset(__FILE__,__LINE__,ptr1, ch, len)
+#undef  bcopy
 #define bcopy(ptr2,ptr1,len)      DBbcopy(__FILE__,__LINE__,ptr2,ptr1,len)
+#undef  bzero
 #define bzero(ptr1,len)           DBbzero(__FILE__,__LINE__,ptr1,len)
+#undef  bcmp
 #define bcmp(ptr2,ptr1,len)       DBbcmp(__FILE__, __LINE__, ptr2, ptr1, len)
 
 #define _bcopy(ptr2,ptr1,len)     DBbcopy(__FILE__,__LINE__,ptr2,ptr1,len)
@@ -518,42 +506,43 @@ char		* DBstrtok __STDCARGS((CONST char *file, int line, char *str1,
 /*
  * string(3) related functions
  */
-#ifdef index
-#undef index
-#endif
-#ifdef rindex
-#undef rindex
-#endif
-#ifdef strchr
-#undef strchr
-#endif
-#ifdef strcmp
-#undef strcmp
-#endif
-#ifdef strcpy
-#undef strcpy
-#endif
-#ifdef strrchr
-#undef strrchr
-#endif
+#undef  index
 #define index(str1,c)		  DBindex(__FILE__, __LINE__, str1, c)
+#undef  rindex
 #define rindex(str1,c)		  DBrindex(__FILE__, __LINE__, str1, c)
+#undef  strcat
 #define strcat(str1,str2)	  DBstrcat(__FILE__,__LINE__,str1,str2)
+#undef  strchr
 #define strchr(str1,c)		  DBstrchr(__FILE__, __LINE__, str1,c)
+#undef  strcmp
 #define strcmp(str1,str2)	  DBstrcmp(__FILE__, __LINE__, str1, str2)
+#undef  strcpy
 #define strcpy(str1,str2)	  DBstrcpy(__FILE__, __LINE__, str1, str2)
+#undef  strcspn
 #define strcspn(str1,str2)	  DBstrcspn(__FILE__, __LINE__, str1,str2)
+#undef  strdup
 #define strdup(str1)		  DBstrdup(__FILE__, __LINE__, str1)
+#undef  stricmp
 #define stricmp(str1,str2)	  DBstricmp(__FILE__, __LINE__, str1, str2)
+#undef  strincmp
 #define strincmp(str1,str2,len)	  DBstrincmp(__FILE__, __LINE__, str1,str2,len)
+#undef  strlen
 #define strlen(str1)		  DBstrlen(__FILE__, __LINE__, str1)
+#undef  strncat
 #define strncat(str1,str2,len)	  DBstrncat(__FILE__, __LINE__, str1,str2,len)
+#undef  strncpy
 #define strncpy(str1,str2,len)	  DBstrncpy(__FILE__,__LINE__,str1,str2,len)
+#undef  strncmp
 #define strncmp(str1,str2,len)	  DBstrncmp(__FILE__, __LINE__, str1,str2,len)
+#undef  strpbrk
 #define strpbrk(str1,str2)	  DBstrpbrk(__FILE__, __LINE__, str1,str2)
+#undef  strrchr
 #define strrchr(str1,c)		  DBstrrchr(__FILE__,__LINE__,str1,c)
+#undef  strspn
 #define strspn(str1,str2)	  DBstrspn(__FILE__, __LINE__, str1,str2)
+#undef  strstr
 #define strstr(str1,str2)	  DBstrstr(__FILE__, __LINE__, str1, str2)
+#undef  strtok
 #define strtok(str1,str2)	  DBstrtok(__FILE__, __LINE__, str1, str2)
 
 /*
@@ -568,8 +557,14 @@ char		* DBstrtok __STDCARGS((CONST char *file, int line, char *str1,
 
 /*
  * $Log: malloc.h,v $
- * Revision 1.1  1993/02/26 11:42:34  dunkel
- * RCS_BASE
+ * Revision 1.2  1995/11/19 22:14:39  tom
+ * regen'd
+ *
+ * Revision 1.39  1995/11/19 21:05:19  tom
+ * corrected declarations of b* functions
+ *
+ * Revision 1.38  1992/08/22 16:27:13  cpcahil
+ * FROM_KEYS
  *
  * Revision 1.38  1992/08/22  16:27:13  cpcahil
  * final changes for pl14

@@ -1,3 +1,25 @@
+1995-11-19  Thomas E. Dickey  <dickey@clark.net>
+
+	* malloc.h, sysdefs.h: regen'd
+
+	* malloc.h.org:
+	removed redundant ifdef/endif bracketing undef's, and added missing undef's
+
+	* Makefile: renamed library to 'dbmalloc'
+	updated Configure script (tested on Linux with gcc 2.7.0)
+	updated cproto rules for cproto 4.x (tested with cproto 4.4a)
+
+	* prototypes.h: regen'd with gcc 2.7.0 on Linux 1.2.8 (ELF)
+
+	* Configure: mods to add b* functions to auto-config
+	corrected test / default for WRTDATA
+	added special hack for __const to accommodate broken gcc 2.7.0 -traditional
+
+	* malloc.h.org: corrected declarations of b* functions
+
+	* cctest.c: added test for b* functions, and for WRTDATA
+	fix s* function test (missing stdio.h caused g++ to warn about printf)
+
 1995-03-11  Thomas E. Dickey  <dickey@clark.net>
 
 	* prototypes.h: regen'd from 14L version after fixing cproto rules
