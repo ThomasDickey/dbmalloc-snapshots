@@ -15,7 +15,7 @@
 
 #ifndef lint
 static
-char rcs_hdr[] = "$Id: memory.c,v 1.22 1992/08/22 16:27:13 cpcahil Exp $";
+char rcs_hdr[] = "$Id: memory.c,v 1.23 1993/02/25 21:28:07 dunkel Exp $";
 #endif
 
 #include <stdio.h>
@@ -291,46 +291,46 @@ DBFmemset(func,file,line,ptr1, ch, len)
 /*
  * bcopy - copy memory block to another area
  */
-MEMDATA  *
+VOIDTYPE
 bcopy(ptr2,ptr1,len)
 	CONST MEMDATA 	* ptr2;
 	MEMDATA 	* ptr1;
-	MEMSIZE 	  len;
+	BCOPYSIZE 	  len;
 {
-	return( DBbcopy((char *)NULL,0,ptr2,ptr1,len) );
+	DBbcopy((char *)NULL,0,ptr2,ptr1,len);
 }
 #endif /* ibm032 */
 
-MEMDATA  *
+VOIDTYPE
 DBbcopy(file,line,ptr2,ptr1,len)
 	CONST char	* file;
 	int		  line;
 	CONST MEMDATA 	* ptr2;
 	MEMDATA 	* ptr1;
-	MEMSIZE 	  len;
+	BCOPYSIZE 	  len;
 {
-	return( DBFmemcpy("bcopy",file,line,ptr1,ptr2,len));
+	DBFmemcpy("bcopy",file,line,ptr1,ptr2,len);
 }
 
 /*
  * bzero - clear block of memory to zeros
  */
-MEMDATA  *
+VOIDTYPE
 bzero(ptr1,len)
 	MEMDATA 	* ptr1;
-	MEMSIZE 	  len;
+	BCOPYSIZE 	  len;
 {
-	return( DBbzero((char *)NULL,0,ptr1,len) );
+	DBbzero((char *)NULL,0,ptr1,len);
 }
 
-MEMDATA  *
+VOIDTYPE
 DBbzero(file,line,ptr1,len)
 	CONST char	* file;
 	int		  line;
 	MEMDATA 	* ptr1;
-	MEMSIZE 	  len;
+	BCOPYSIZE 	  len;
 {
-	return( DBFmemset("bzero",file,line,ptr1,'\0',len) );
+	DBFmemset("bzero",file,line,ptr1,'\0',len);
 }
 
 /*
@@ -340,7 +340,7 @@ int
 bcmp(ptr2, ptr1, len)
 	CONST MEMDATA 	* ptr1;
 	CONST MEMDATA 	* ptr2;
-	MEMSIZE 	  len;
+	BCOPYSIZE 	  len;
 {
 	return( DBbcmp((char *)NULL,0,ptr2, ptr1, len) );
 }
@@ -351,15 +351,15 @@ DBbcmp(file, line, ptr2, ptr1, len)
 	int		  line;
 	CONST MEMDATA 	* ptr1;
 	CONST MEMDATA 	* ptr2;
-	MEMSIZE  	  len;
+	BCOPYSIZE  	  len;
 {
 	return( DBFmemcmp("bcmp",file,line,ptr1,ptr2,len) );
 }
 
 /*
  * $Log: memory.c,v $
- * Revision 1.22  1992/08/22 16:27:13  cpcahil
- * FROM_KEYS
+ * Revision 1.23  1993/02/25 21:28:07  dunkel
+ * corrected declarations of b* functions
  *
  * Revision 1.22  1992/08/22  16:27:13  cpcahil
  * final changes for pl14

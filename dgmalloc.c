@@ -67,54 +67,54 @@ _mallopt(cmd,value)
     return( dbmallopt(cmd,&value) );
 }
 
-MEMDATA  *
+VOIDTYPE
 _bcopy(ptr2, ptr1, len)
 	CONST MEMDATA	* ptr2;
 	MEMDATA		* ptr1;
-	MEMSIZE		  len;
+	BCOPYSIZE	  len;
 {
-	return( DBbcopy((char *)NULL,0,ptr2,ptr1,len) );
+	DBbcopy((char *)NULL,0,ptr2,ptr1,len);
 }
 
-MEMDATA  *
+VOIDTYPE 
 _bzero(ptr1, len)
 	MEMDATA		* ptr1;
-	MEMSIZE		  len;
+	BCOPYSIZE	  len;
 {
-	return( DBbzero((char *)NULL,0,ptr1,len) );
+	DBbzero((char *)NULL,0,ptr1,len);
 }
 
 int
 _bcmp(ptr2, ptr1, len)
 	CONST MEMDATA	* ptr1;
 	CONST MEMDATA	* ptr2;
-	MEMSIZE		  len;
+	BCOPYSIZE	  len;
 {
 	return( DBbcmp((char *)NULL,0,ptr2, ptr1, len) );
 }
 
-MEMDATA  *
+VOIDTYPE
 __dg_bcopy(ptr2, ptr1, len)
 	CONST MEMDATA	* ptr2;
 	MEMDATA		* ptr1;
-	MEMSIZE		  len;
+	BCOPYSIZE	  len;
 {
-	return( DBbcopy((char *)NULL,0,ptr2,ptr1,len) );
+	DBbcopy((char *)NULL,0,ptr2,ptr1,len);
 }
 
-MEMDATA  *
+VOIDTYPE
 __dg_bzero(ptr1, len)
 	MEMDATA		* ptr1;
-	MEMSIZE		  len;
+	BCOPYSIZE	  len;
 {
-	return( DBbzero((char *)NULL,0,ptr1,len) );
+	DBbzero((char *)NULL,0,ptr1,len);
 }
 
 int
 __dg_bcmp(ptr2, ptr1, len)
 	CONST MEMDATA	* ptr1;
 	CONST MEMDATA	* ptr2;
-	MEMSIZE		  len;
+	BCOPYSIZE	  len;
 {
 	return( DBbcmp((char *)NULL,0,ptr2, ptr1, len) );
 }
@@ -122,8 +122,8 @@ __dg_bcmp(ptr2, ptr1, len)
 
 /*
  * $Log: dgmalloc.c,v $
- * Revision 1.1  1992/09/04 12:00:00  tom
- * Initial revision
+ * Revision 1.2  1993/02/25 21:22:06  dunkel
+ * corrected declarations of b* functions
  *
  * Revision 1.4  1992/08/22  16:27:13  cpcahil
  * final changes for pl14

@@ -29,12 +29,12 @@ DATATYPE *_realloc __stdcargs((DATATYPE *cptr, SIZETYPE size));
 DATATYPE *_calloc __stdcargs((SIZETYPE nelem, SIZETYPE elsize));
 void _free __stdcargs((DATATYPE *cptr));
 int _mallopt __stdcargs((int cmd, union dbmalloptarg value));
-MEMDATA *_bcopy __stdcargs((CONST MEMDATA *ptr2, MEMDATA *ptr1, MEMSIZE len));
-MEMDATA *_bzero __stdcargs((MEMDATA *ptr1, MEMSIZE len));
-int _bcmp __stdcargs((CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, MEMSIZE len));
-MEMDATA *__dg_bcopy __stdcargs((CONST MEMDATA *ptr2, MEMDATA *ptr1, MEMSIZE len));
-MEMDATA *__dg_bzero __stdcargs((MEMDATA *ptr1, MEMSIZE len));
-int __dg_bcmp __stdcargs((CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, MEMSIZE len));
+VOIDTYPE _bcopy __stdcargs((CONST MEMDATA *ptr2, MEMDATA *ptr1, BCOPYSIZE len));
+VOIDTYPE _bzero __stdcargs((MEMDATA *ptr1, BCOPYSIZE len));
+int _bcmp __stdcargs((CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, BCOPYSIZE len));
+VOIDTYPE __dg_bcopy __stdcargs((CONST MEMDATA *ptr2, MEMDATA *ptr1, BCOPYSIZE len));
+VOIDTYPE __dg_bzero __stdcargs((MEMDATA *ptr1, BCOPYSIZE len));
+int __dg_bcmp __stdcargs((CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, BCOPYSIZE len));
 /* fill.c */
 VOIDTYPE FillInit __stdcargs((void));
 int FillCheck __stdcargs((CONST char *func, CONST char *file, int line, struct mlist *ptr, int showerrors));
@@ -122,12 +122,12 @@ int DBFmemcmp __stdcargs((CONST char *func, CONST char *file, int line, CONST ME
 MEMDATA *memset __stdcargs((MEMDATA *ptr1, register int ch, register MEMSIZE len));
 MEMDATA *DBmemset __stdcargs((CONST char *file, int line, MEMDATA *ptr1, register int ch, register MEMSIZE len));
 MEMDATA *DBFmemset __stdcargs((CONST char *func, CONST char *file, int line, MEMDATA *ptr1, register int ch, register MEMSIZE len));
-MEMDATA *bcopy __stdcargs((CONST MEMDATA *ptr2, MEMDATA *ptr1, MEMSIZE len));
-MEMDATA *DBbcopy __stdcargs((CONST char *file, int line, CONST MEMDATA *ptr2, MEMDATA *ptr1, MEMSIZE len));
-MEMDATA *bzero __stdcargs((MEMDATA *ptr1, MEMSIZE len));
-MEMDATA *DBbzero __stdcargs((CONST char *file, int line, MEMDATA *ptr1, MEMSIZE len));
-int bcmp __stdcargs((CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, MEMSIZE len));
-int DBbcmp __stdcargs((CONST char *file, int line, CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, MEMSIZE len));
+VOIDTYPE bcopy __stdcargs((CONST MEMDATA *ptr2, MEMDATA *ptr1, BCOPYSIZE len));
+VOIDTYPE DBbcopy __stdcargs((CONST char *file, int line, CONST MEMDATA *ptr2, MEMDATA *ptr1, BCOPYSIZE len));
+VOIDTYPE bzero __stdcargs((MEMDATA *ptr1, BCOPYSIZE len));
+VOIDTYPE DBbzero __stdcargs((CONST char *file, int line, MEMDATA *ptr1, BCOPYSIZE len));
+int bcmp __stdcargs((CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, BCOPYSIZE len));
+int DBbcmp __stdcargs((CONST char *file, int line, CONST MEMDATA *ptr2, CONST MEMDATA *ptr1, BCOPYSIZE len));
 /* tostring.c */
 int tostring __stdcargs((char *buf, unsigned long val, int len, int base, int fill));
 /* m_perror.c */
