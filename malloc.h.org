@@ -11,11 +11,11 @@
  *		* this copyright notice is not modified or removed from any
  *		  source file
  *
- * modified by T.Dickey (dickey@clark.net) 1995/11/19 to correct declarations
+ * modified by Thomas E. Dickey 1995/11/19 to correct declarations
  *		of the b* functions
  */
 /*
- * $Id: malloc.h.org,v 1.40 1995/11/19 22:13:40 tom Exp $
+ * $Id: malloc.h.org,v 1.41 2003/12/24 14:42:39 tom Exp $
  */
 
 #ifndef _DEBUG_MALLOC_INC
@@ -70,14 +70,14 @@ DATATYPES_MARKER
  */
 #ifndef   DATATYPE
 	/*
-	 * the following string should cause a comilation error and get the
+	 * the following string should cause a compilation error and get the
 	 * user to look at this stuff to find out what is wrong.
 	 */
-	"This file is not configured correctly for this system. Run configure
+	"This file is not configured correctly for this system. Run configure\
 	 and check its results"
 	char * malloc(); /* DON'T REMOVE THIS LINE if you get a compiler error
 			    here it is because the malloc.h file is not 
-			    configured correctly  See the readme/problems
+			    configured correctly  See the README/PROBLEMS
 			    files for more info */
 
 #endif /* DATATYPE */
@@ -209,14 +209,14 @@ union dbmalloptarg
 #define M_CODE_NO_END		2	/* chain end != endptr		*/
 #define M_CODE_BAD_PTR		3	/* pointer not in malloc area	*/
 #define M_CODE_BAD_MAGIC	4	/* bad magic number in header	*/
-#define M_CODE_BAD_CONNECT	5	/* chain poingers corrupt	*/
+#define M_CODE_BAD_CONNECT	5	/* chain pointers corrupt	*/
 #define M_CODE_OVERRUN		6	/* data overrun in malloc seg	*/
 #define M_CODE_REUSE		7	/* reuse of freed area		*/
 #define M_CODE_NOT_INUSE	8	/* pointer is not in use	*/
 #define M_CODE_NOMORE_MEM	9	/* no more memory available	*/
-#define M_CODE_OUTOF_BOUNDS	10	/* gone beyound bounds 		*/
+#define M_CODE_OUTOF_BOUNDS	10	/* gone beyond bounds 		*/
 #define M_CODE_FREELIST_BAD	11	/* inuse segment on freelist	*/
-#define M_CODE_NOBOUND		12	/* can't calculate boundry	*/
+#define M_CODE_NOBOUND		12	/* can't calculate boundary	*/
 #define M_CODE_STK_NOCUR	13	/* no current element on stack	*/
 #define M_CODE_STK_BADFUNC	14	/* current func doesn't match	*/
 #define M_CODE_UNDERRUN		15	/* data underrun in malloc seg	*/
@@ -473,6 +473,10 @@ char		* DBstrtok __STDCARGS((CONST char *file, int line, char *str1,
 
 /*
  * $Log: malloc.h.org,v $
+ * Revision 1.41  2003/12/24 14:42:39  tom
+ * correct a syntax error (missing backslash) in the string used to force a
+ * compilation error when DATATYPE is not found (report by Joel Breazeale).
+ *
  * Revision 1.40  1995/11/19 22:13:40  tom
  * removed redundant ifdef/endif bracketing undef's, and added missing undef's
  *

@@ -4,8 +4,7 @@
 #
 #	Modified for Linux by Harald Dunkel 
 #				(hari@pool.informatik.rwth-aachen.de)
-#	Updated auto-config script, changed install-name - T.Dickey
-#				(dickey@clark.net)
+#	Updated auto-config script, changed install-name - Thomas E. Dickey
 # 
 #  This software may be distributed freely as long as the following conditions
 #  are met:
@@ -18,7 +17,7 @@
 # 		  source file
 #
 #
-# $Id: Makefile,v 1.41 1995/11/19 21:46:36 tom Exp $
+# $Id: Makefile,v 1.42 2003/12/24 14:40:02 tom Exp $
 #
 # This is the Makefile for the malloc debugging library
 #
@@ -26,7 +25,7 @@
 #       may require hand editing (mostly the DATATYPE and SIZETYPE
 #	typedefs) because of system wierdities.
 #
-# Usefull targets:
+# Useful targets:
 #
 #	all		make all programs/libs in the local directory
 #	install		install updated programs/libs
@@ -36,7 +35,7 @@
 #	clean		clean up after yourself
 #	fullclean	clean up everything (including configure stuff)
 #
-# NOTE: there are several other targets used by myself for souce code
+# NOTE: there are several other targets used by myself for source code
 # maintenance related functions.  These are probably specific to my system
 # and may not do what they are supposed to do in a different environment.
 # Therefore, unless you know what you are doing, I would suggest not running
@@ -59,14 +58,14 @@
 # -DCTYPE_SUPPORT=x	where x is one of the following
 #
 #				1 - use plain-jane ctype.h which is only valid
-#				    for the ansii character set (DEFAULT)
+#				    for the ANSI character set (DEFAULT)
 #				2 - use POSIX setlocal() to setup the character
 #				    set definitions
 #				3 - use C library islower() & toupper()
 #				    functions
 #
 # NOTE: if you add any flags other than the above to the CFLAGS, you might want
-#	to add a similar arguement in the Config.flags file.  However, you
+#	to add a similar argument in the Config.flags file.  However, you
 # 	should remember that the malloc.h configuration will depend upon these
 #	settings and you could have a problem if you attempt to use the file
 #	in a compile session that doesn't include these flags.
@@ -250,6 +249,9 @@ CHECKSUMS: $(SRCFILES)
 MANIFEST: $(MANSRCFILES)	
 	$(SHARCMD) -x
 	chmod -w MANIFEST
+
+ChangeLog:
+	rcs2log |sed -e 's/[ ]*<tom@.*//' >$@
 	
 $(LIB): $(LIBOBJS)
 	ar ru $(LIB) $(LIBOBJS)

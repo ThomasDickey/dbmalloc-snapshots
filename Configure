@@ -13,7 +13,7 @@
 #		* this copyright notice is not modified or removed from any
 #		  source file
 #
-# $Id: Configure,v 1.23 1995/11/19 21:17:23 tom Exp $
+# $Id: Configure,v 1.24 2003/12/24 15:01:26 tom Exp $
 #
 # This shell script attempts to automatically determine the correct settings
 # for the malloc library include file and compile pre-defines.  This script has
@@ -23,7 +23,7 @@
 #	Intel 486	DELL SVR4 	cc & gcc 1.40
 #	HP9000		HP/UX 8.0	cc & cc -Aa -D_POSIX_SOURCE
 #	AT&T 3B2-600	SVR4.1ES	cc (relaxed ansi - no cc flags)
-#	IBM RS6000	AIX 3.1		cc 
+#	IBM RS6000	AIX 3.1		cc
 #	Sun Sparc 2	SunOS 4.1.1	cc
 #
 # It has also been reported to work in the following environments:
@@ -34,21 +34,21 @@
 #	Hp 9000/700	HP-UX 8.05	cc
 #	Sun Sparc 	SunOs 4.1.1	cc (in bsd environment)
 #	Motorola 88K	SysV 3.2
-#	DecStation 5100	Ultrix 4.2	
-#	IBM rs/6000	AIX 3.1.1	
-#	IBM rs/6000	AIX 3.2	
+#	DecStation 5100	Ultrix 4.2
+#	IBM rs/6000	AIX 3.1.1
+#	IBM rs/6000	AIX 3.2
 #	Intel 486	ESIX SysV 4.0
 #
 # If you run this script in a different environment it may not work correctly or
 # it may make an incorrect determination, so be more cautious about the results.
 #
-# Modified by T.Dickey (dickey@clark.net) 1995/11/19 to add tests for b*
+# Modified by Thomas E. Dickey 1995/11/19 to add tests for b*
 #	functions and special __const hack to configure with gcc 2.7.0
 #
 #
 SP="           "
 CCFILE=CF$$c
-CCLIST="gcc2 gcc como CC g++ c89 cc pcc"
+CCLIST="gcc2 gcc como CC g++ c89 c99 cc pcc"
 CONFFILE=.configure
 DIRLIST="`echo $PATH | tr ':' ' '`"
 INCDIR=/usr/include
@@ -79,7 +79,7 @@ else
 fi
 
 #
-# if we already have a configuration 
+# if we already have a configuration
 #
 if [ $# = 0 -a -s "${CONFFILE}" -a -s "${CONFFILE}.s" ]; then
 
@@ -92,9 +92,9 @@ else
 			"system."
 	echo "This may take a while, please be patient"
 
-	
+
 	#
-	# Determine default sizetype (for use when we are guessing at 
+	# Determine default sizetype (for use when we are guessing at
 	# parameter settings).
 	#
 	grep size_t ${INCDIR}/sys/types.h >/dev/null 2>&1
@@ -135,7 +135,7 @@ else
 					echo "        found $compiler in $dir"
 					echo $dir/$compiler >> ${TMPCOMP}
 					#
-					# if this is gcc, also add a second 
+					# if this is gcc, also add a second
 					#   entry with the -traditional flag
 					#
 					if [ $compiler = "gcc" ]; then
@@ -149,7 +149,7 @@ else
 							gcc_const=
 						fi
 					fi
-					
+
 					break
 				fi
 			done
@@ -175,7 +175,7 @@ else
 	first=1
 	ending=
 	#
-	# for each compiler. 
+	# for each compiler.
 	#
 	echo "    checking compiler configuration(s)..."
 	while read cc
@@ -220,11 +220,11 @@ else
 			#
 			# otherwise if the last compiler didn't have a
 			# pre-defined symbol we can't add another set
-			# because it would conflict with the previous 
+			# because it would conflict with the previous
 			# set of definitions.
 			#
 			if [ ! -s ${TMPPREDEF} ]; then
-			
+
 				echo "${SP}More than one compiler and no way to tell the" \
 					 "difference between them"
 				echo "${SP}So, hopefully the one set of defs will suffice"
@@ -238,7 +238,7 @@ else
 				echo >> ${TMPSET}
 				echo "#else  /* $PREDEF */" >> ${TMPSET}
 				echo >> ${TMPSET}
-	
+
 				echo >> ${TMPSET}.s
 				echo "#else  /* $PREDEF */" >> ${TMPSET}.s
 				echo >> ${TMPSET}.s
@@ -247,12 +247,15 @@ else
 		fi
 
 		#
-		# add the appropriate #ifdef to the settings file for this 
+		# add the appropriate #ifdef to the settings file for this
 		# compiler (if it has any)
 		#
+		rm -f cctest ${TMPPREDEF}1
 		$cc -DPRE_DEFINES -o cctest cctest.c > /dev/null 2>&1
 
-		./cctest > ${TMPPREDEF}1
+		if [ -x cctest ] ; then
+			./cctest > ${TMPPREDEF}1
+		fi
 
 		if [ ! -s ${TMPPREDEF}1 ]; then
 			echo "skipped" >> ${TMPSKIPPED}
@@ -261,7 +264,7 @@ else
 			echo "${SP}    is usually caused by a compiler installed without"
 			echo "${SP}    its libraries (like g++)"
 			exit 0
-			
+
 		else
 
 			rm -f ${TMPSKIPPED}
@@ -453,7 +456,7 @@ else
 		#
 		# Check the type of exit
 		#
-		
+
 		for type in ${voidtype} int
 		do
 			$cc -DEXITTEST ${USE_UNISTD} ${USE_STDLIB} \
@@ -469,7 +472,7 @@ else
 				exittype=
 			fi
 		done
-		
+
 		if [ "x${exittype}" != "x" ]; then
 			echo "#define EXITTYPE $exittype" >> ${TMPSET}
 		else
@@ -484,7 +487,7 @@ else
 		# Check to see if <malloc.h> is available -- if it
 		# isn't, we don't have to try using it later in the
 		# script and things will go faster
-		# 
+		#
 		$cc -DMALLOCHTEST cctest.c > ${TMPCC} 2>&1
 		cc_result=$?
 		egrep "$WARN_REGEXP" ${TMPCC} > /dev/null 2>&1
@@ -705,7 +708,7 @@ else
 			extra=""
 		fi
 
-		# 
+		#
 		# for each include file we are checking
 		#
 		for fileinc in -DUSE_MEMORY_H  $extra
@@ -891,7 +894,7 @@ else
 			rm -f cctest
 			$cc -D$testtype -DCOMPARETEST=memcmp \
 				cctest.c -o cctest >${TMPCC} 2>&1
-	
+
 			if [ -s ./cctest ]; then
 				./cctest
 				if [ $? = 0 ]; then
@@ -933,7 +936,7 @@ else
 			#
 			$cc -DSTRSIZE="$sizetype"   -DCONST="$const" \
 			    -DSTR_COMPILETEST  -c cctest.c >${TMPCC} 2>&1
-			
+
 			if [ $? = 0 ]; then
 				if egrep "${WARN_REGEXP}" ${TMPCC}>/dev/null; then
 					rm ${TMPCC};
@@ -944,11 +947,11 @@ else
 			fi
 
 		done
-		
+
 		if [ ! -s ${TMPDEF} ]; then
 			#
 			# guess at what the correct setting should be.  If size_t is in
-			# /usr/include/string.h, use it, otherwise use the default size 
+			# /usr/include/string.h, use it, otherwise use the default size
 			# type
 			#
 			if grep size_t ${INCDIR}/string.h >/dev/null 2>&1; then
@@ -987,7 +990,7 @@ else
 			rm -f cctest
 			$cc -D$testtype -DCOMPARETEST=strncmp \
 				cctest.c -o cctest >${TMPCC} 2>&1
-	
+
 			if [ -s ./cctest ]; then
 				./cctest
 				if [ $? = 0 ]; then
@@ -1018,7 +1021,7 @@ else
 
 		cat < ${TMPDEF} >> ${TMPSET}
 		rm -f ${TMPDEF}
-		
+
 		#
 		# check settings for write size
 		#
@@ -1036,7 +1039,7 @@ else
 					-DWRTDATA="$writetype" \
 					${USE_UNISTD} ${USE_STDLIB} \
 				    -DWRT_COMPILETEST  -c cctest.c >${TMPCC} 2>&1
-				
+
 				if [ $? = 0 ]; then
 					if egrep "${WARN_REGEXP}" ${TMPCC} >/dev/null; then
 						rm ${TMPCC};
@@ -1053,7 +1056,7 @@ else
 		    done
 		    if [ $DONE = y ]; then break; fi
 		done
-		
+
 		if [ ! -s ${TMPDEF} ]; then
 			#
 			# if we don't know, then guess the natural character type
@@ -1083,7 +1086,7 @@ else
 		#
 		# -- not implemented yet
 		#
-		
+
 		) < /dev/null
 
 		if [ -s ${TMPBREAK} ]; then
@@ -1135,45 +1138,45 @@ else
 	# if we have the Intrinsic.h file, then set the flag to indicate so
 	#
 	if [ -s /usr/include/X11/Intrinsic.h ]; then
-		(	
-		echo "/*" 
+		(
+		echo "/*"
 		echo " * Found X intrinsic file in /usr/include/X11"
 		echo " */"
 		echo "#define FOUND_X_INTRINSIC 1"
 		echo ""
 		) >> ${CONFFILE}.s
 	else
-		(	
-		echo "/*" 
+		(
+		echo "/*"
 		echo " * Didn't find X intrinsic file in /usr/include/X11"
 		echo " */"
-		echo "/* #define FOUND_X_INTRINSIC 1 */" 
+		echo "/* #define FOUND_X_INTRINSIC 1 */"
 		echo ""
 		) >> ${CONFFILE}.s
 	fi
-	
+
 
 	#
 	# if wait.h is present in /usr/include/sys/wait.h
 	#
 	if [ -s /usr/include/sys/wait.h ]; then
-		(	
-		echo "/*" 
+		(
+		echo "/*"
 		echo " * Found wait.h in /usr/include/sys"
 		echo " */"
 		echo "#define NEED_WAIT 1"
 		echo ""
 		) >> ${CONFFILE}.s
 	else
-		(	
-		echo "/*" 
+		(
+		echo "/*"
 		echo " * Didn't find wait.h in /usr/include/sys"
 		echo " */"
-		echo "/* #define NEED_WAIT 1 */" 
+		echo "/* #define NEED_WAIT 1 */"
 		echo ""
 		) >> ${CONFFILE}.s
 	fi
-	
+
 	#
 	# check to see if the XtAlloc module includes definitions for the Heap
 	# management.  Note that this is generic for all compilers, so it
@@ -1188,15 +1191,15 @@ else
 			echo found >> ${TMPFOUND}
 
 			if [ -z "$heap" ]; then
-			
+
 				(
-				echo "/*" 
+				echo "/*"
 				echo " * don't force inclusion of XtHeap"
 				echo " */"
 				echo "#define DONT_FORCE_HEAPSTUFF 1"
 				echo ""
 				) >> ${CONFFILE}.s
-		
+
 				break
 			fi
 
@@ -1205,7 +1208,7 @@ else
 
 	if [ ! -s ${TMPFOUND} ]; then
 		(
-		echo "/*" 
+		echo "/*"
 		echo " * don't force inclusion of XtHeap"
 		echo " */"
 		echo "#define DONT_FORCE_HEAPSTUFF 1"
@@ -1296,10 +1299,10 @@ if [ ! -s ${CONFFILE}.O ]; then
 	for i in $LIBDIRS
 	do
 		if [ -s $i/libc.a ]; then
-		
+
 			LIBC=$i/libc.a
 			break
-		
+
 		fi
 	done
 
@@ -1352,10 +1355,10 @@ if [ ! -s ${CONFFILE}.O ]; then
 			./changestr ${i}.o ${i} ${tgtstr}
 
 			if [ $? = 0 ]; then
-		
+
 				#
 				# test new memset module
-				# 
+				#
 				rm -f cctest
 				${cc} -D${def} cctest.c -o cctest ${i}.o  \
 					> /dev/null 2>&1
@@ -1375,7 +1378,7 @@ if [ ! -s ${CONFFILE}.O ]; then
 			# makefile knows to use it
 			#
 			if [ "x${output}" = "xx   yyy" ]; then
-			
+
 				#
 				# move the object module so the makefile
 				# knows to use it
@@ -1383,7 +1386,7 @@ if [ ! -s ${CONFFILE}.O ]; then
 				rm -f ${tgtfile}.O
 				mv ${i}.o ${tgtfile}.O
 				rm -f ${i}.o
-		
+
 			fi
 
 			#

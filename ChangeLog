@@ -1,3 +1,27 @@
+2003-12-24  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* MANIFEST: generated from rcs logs
+
+	* cctest.c:
+	defined MAIN() macro to force consistent usage of the prototype for main(),
+	eliminate associated compiler warnings.  Move include for <stdio.h> to top,
+	and add <sys/types.h> to ensure that size_t is declared.
+
+	* Configure:
+	add c99 as a possible compiler.  Modify check for predefined symbols to first
+	remove the test-program and its output to avoid picking up results from a
+	previous compiler if the test-program cannot be compiled.
+
+	* malloc.h.org:
+	correct a syntax error (missing backslash) in the string used to force a
+	compilation error when DATATYPE is not found (report by Joel Breazeale).
+
+	* Makefile: correct some spelling.  Add a rule to generate ChangeLog.
+
+2003-12-23  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* xmalloc.c: add a cast to remove a compile-warning.
+
 2001-01-14  Thomas E. Dickey  <dickey@clark.net>
 
 	* string.c: tweak to build with glibc
