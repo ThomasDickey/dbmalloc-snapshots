@@ -1,3 +1,11 @@
+1992-09-04  Thomas E. Dickey  <dickey@software.org>
+
+	* CHECKSUMS, dgmalloc.c, fill.c, malloc.man, minipatch, prototypes.h, testerr.c, testmalloc.c, testmem.c, teststack.c:
+	New file.
+
+	* DISTRIBU.TED, MANIFEST, PROBLEMS, README, patchlevel, testerr.base:
+	RCS_BASE
+
 1992-09-03  cpcahil
 
 	* CHANGES, malloc.c, mallocin.h, realloc.c: FROM_KEYS

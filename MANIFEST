@@ -1,11 +1,15 @@
-MANIFEST for dbmalloc, version t19920903
+MANIFEST for dbmalloc, version dbmalloc-14
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 Buildpatch                      Shell to build patch file
 CHANGES                         List of changes
+CHECKSUMS                       Checksums (BSD and SYSV) for each file
 Config.flags                    Auto config compiler flags
 Configure                       Automatic configuration script
+DISTRIBU.TED                    usenet posting for dbmalloc-14
 Makefile                        makefile for dbmalloc
+PROBLEMS                        List of typical porting/use problems
+README                          READ THIS FIRST
 Runtests                        Automatic test script
 abort.c                         malloc_abort support
 calloc.c                        calloc and related functions
@@ -13,7 +17,9 @@ cctest.c                        Module used by Configure
 datamc.c                        Efficient, portable memcpy routine
 datams.c                        Efficient, portable memset routine
 debug.h                         debugging output header
+dgmalloc.c                      DataGeneral low level allocation functions
 dump.c                          malloc chain dumper
+fill.c                          Memory fill/check routines
 free.c                          free and related functions
 leak.c                          memory leak detection stuff
 m_init.c                        malloclib initializations
@@ -22,15 +28,24 @@ malign.c                        memory alignment routines
 malloc.3                        malloc man page ([nt]roff source)
 malloc.c                        malloc and related functions
 malloc.h.org                    include file for programs using the library
+malloc.man                      nroff'd version of the manual page
 mallocin.h                      internal header file
 mallopt.c                       mallopt and related stuff
 mchain.c                        chain checking modules
 mcheck.c                        error checking modules
 memory.c                        mem* and b* functions
+minipatch                       shell to build intermediate patches
+patchlevel                      current patch level
+prototypes.h                    functional prototypes
 realloc.c                       realloc and related functions
 size.c                          malloc_size module
 stack.c                         Stack maintenance functions
 string.c                        str* functions
+testerr.base                    Baseline output for testerr program
+testerr.c                       error test program
+testmalloc.c                    malloc exerciser
+testmem.c                       mem*/str*/b* exerciser
+teststack.c                     malloc stack exerciser
 tostring.c                      numeric to string converter
 tostring.h                      header for numeric converter
 xheap.c                         Xt heap stuff (for X11R5 compatibility)
