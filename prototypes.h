@@ -1,7 +1,7 @@
-#if defined(__STDC__) || defined(__cplusplus)
-# define __stdcargs(s) s
+#if __STDC__ || defined(__cplusplus)
+#define __stdcargs(s) s
 #else
-# define __stdcargs(s) ()
+#define __stdcargs(s) ()
 #endif
 
 /* malloc.c */
@@ -159,6 +159,7 @@ char *XtCalloc __stdcargs((unsigned int num, unsigned int size));
 char *debug_XtCalloc __stdcargs((CONST char *file, int line, unsigned int num, unsigned int size));
 void XtFree __stdcargs((char *ptr));
 void debug_XtFree __stdcargs((CONST char *file, int line, char *ptr));
+void NeverCalledFunctionFromAnywhere __stdcargs((void));
 /* xheap.c */
 void _XtHeapInit __stdcargs((Heap *heap));
 char *_XtHeapAlloc __stdcargs((Heap *heap, Cardinal bytes));

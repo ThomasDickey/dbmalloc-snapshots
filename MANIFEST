@@ -1,4 +1,4 @@
-MANIFEST for dbmalloc, version dbmalloc-14L
+MANIFEST for dbmalloc, version t19950311
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 ANNOUNCE                        notes for Linux release
@@ -7,6 +7,7 @@ CHANGES                         List of changes
 CHECKSUMS                       Checksums (BSD and SYSV) for each file
 Config.flags                    Auto config compiler flags
 Configure                       Automatic configuration script
+DISTRIBU.TED                    usenet posting for dbmalloc-14
 Makefile                        makefile for dbmalloc
 PROBLEMS                        List of typical porting/use problems
 README                          READ THIS FIRST

@@ -1,0 +1,60 @@
+Newsgroups: comp.sources.misc
+From: cpcahil@vti.com (Conor P. Cahill)
+Subject:  v32i005:  dbmalloc - Debug Malloc Library PL14, Part00/10
+Message-ID: <csm-v32i005=dbmalloc.101423@sparky.IMD.Sterling.COM>
+X-Md4-Signature: d84550bbca8ac57a8eb0331f52093e2e
+Date: Fri, 4 Sep 1992 15:15:54 GMT
+Approved: kent@sparky.imd.sterling.com
+
+Submitted-by: cpcahil@vti.com (Conor P. Cahill)
+Posting-number: Volume 32, Issue 5
+Archive-name: dbmalloc/part00
+Environment: C, UNIX
+
+This is the malloc debugging library (patchlevel 14).  This library contains
+a drop-in replacement for the standard dynamic memory allocation routines and 
+many of the other C modules that are typically used to access and/or manipulate
+these data areas.  The replacements function almost identically to the original
+functions with the exception that they perform a significant amount of 
+error checking and/or validating.  
+
+This library can be used with very little (if any) changes to the original
+code (many times only requiring a re-link of the executable) and provide a
+full-service debugging capability.
+
+The entire library will follow in 10 separate shar files.
+
+This new version includes several enhancements over patch level 13 including:
+
+	* more auto-configuration tuning
+	* several bug fixes
+
+In addition to the changes listed above, this version contains the
+following changes since the comp.soures.reviewed release at patch
+level 7, in Volume 2, Issue 1:
+
+	* Much better performance
+	* automatic configuration on most systems
+	* addition of XtAlloc routines for X window debugging
+	* better identification of the source of double frees
+	* ability to record function stack info so error reports give 
+	  the calling stack for where the data was allocated and/or the
+	  error was detected (note: this is manually maintained by the pgm)
+	* more support for leak detection (especially with respect to getting
+	  rid of leak reports on things you know are not leaks)
+	* additional checking of pointesr to make the library more robust
+	* added case insensitive string comparison routines
+	* several bug fixes and/or portability changes
+	* added ability to change the state of the fill area flag
+	* added capability to disallow reuse of free'd segments (so that
+	  double frees could be more readily identified by the data in 
+	  the segment
+	* a couple of function name changes
+	* new funcs: memalign, malloc_abort, malloc_size
+
+See the CHANGES, README, and malloc.3 files for more info
+*** SENTINEL(tm) The ultimate Debugging Environment - email for more info ***
+
+Conor P. Cahill              (703)430-9247            cpcahil@virtech.vti.com
+Virtual Technologies, Inc.  46030 Manekin Plaza          Dulles, VA 21066 
+
