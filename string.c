@@ -21,7 +21,7 @@
  */
 
 #include <stdio.h>
-#if ! defined(_IBMR2) && ! defined(ultrix)
+#if ! defined(_IBMR2) && ! defined(ultrix) && !defined(__GLIBC__)
 #include <string.h>
 #endif
 
@@ -65,7 +65,7 @@ static int locale_initialized;
 
 #ifndef lint
 static
-char rcs_hdr[] = "$Id: string.c,v 1.30 1992/08/22 16:27:13 cpcahil Exp $";
+char rcs_hdr[] = "$Id: string.c,v 1.31 2001/01/14 23:56:29 tom Exp $";
 #endif
 
 static int	in_string_code;
@@ -1019,6 +1019,9 @@ strtoken(stringp, delim, skip)
 
 /*
  * $Log: string.c,v $
+ * Revision 1.31  2001/01/14 23:56:29  tom
+ * tweak to build with glibc
+ *
  * Revision 1.30  1992/08/22 16:27:13  cpcahil
  * FROM_KEYS
  *

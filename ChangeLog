@@ -1,3 +1,7 @@
+2001-01-14  Thomas E. Dickey  <dickey@clark.net>
+
+	* string.c: tweak to build with glibc
+
 1995-11-19  Thomas E. Dickey  <dickey@clark.net>
 
 	* malloc.h, sysdefs.h: regen'd
