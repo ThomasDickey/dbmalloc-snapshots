@@ -1,0 +1,45 @@
+Hello, Linuxers.
+
+You can find the sources of Conor P. Cahill's debugging malloc 
+library (Version 1.14) patched for Linux 0.99.5 and libc 4.3 in 
+
+	/pub/incomming 
+at 
+	ftp.informatik.rwth-aachen.de 
+
+now. It would be very nice if you distribute it over the net. Here 
+is what Conor writes about it (I've taken that from his README):
+
+-----------------------------------------------------------------------------
+
+This package is a collection of routines which are a drop-in replacement
+for the malloc(3), memory(3), string(3), and bstring(3) library functions.
+These replacement modules are different from the original modules in that
+they provide a full set of debugging features which detect malloc 
+memory overruns and other types of misuse.
+
+-----------------------------------------------------------------------------
+
+I've made some short tests running the included test programs, but
+I don't know if I've found and fixed all pitfalls. At least one 
+pitfall still exists (a problem with exit() and _exit() which may
+result in an infinite loop), but I will write a message obout it in 
+comp.os.linux.
+
+There are also debugging functions for XWindow applications (XtMalloc, 
+XtFree, etc.). Take a look at README.Linux about that.
+
+I have checked the X specific stuff by debugging xdtm-2.5. Xdtm is full 
+of bugs, and a lot of them have nothing to do with malloc(). It should 
+never be distributed. Please don't ask me to send you a debugged version 
+of it. PERHAPS I will put a fixed version on the net.
+
+Dbmalloc is very usefull. After a very short time you may wonder how ever 
+you came along without it.
+
+
+Have fun.
+
+Harald Dunkel
+hari@pool.informatik.rwth-aachen.de
+

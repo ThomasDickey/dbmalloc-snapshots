@@ -1,6 +1,9 @@
 #
 # 
 #  (c) Copyright 1990, 1991, 1992 Conor P. Cahill (uunet!virtech!cpcahil).  
+#
+#	Modified for Linux by Harald Dunkel 
+#				(hari@pool.informatik.rwth-aachen.de)
 # 
 #  This software may be distributed freely as long as the following conditions
 #  are met:
@@ -13,7 +16,7 @@
 # 		  source file
 #
 #
-# $Id: Makefile,v 1.39 1992/08/22 16:27:13 cpcahil Exp $
+# $Id: Makefile,v 1.40 1993/03/01 10:18:56 dunkel Exp $
 #
 # This is the Makefile for the malloc debugging library
 #
@@ -49,6 +52,8 @@
 #			an ANSI conforming compiler.
 # -DDONT_USE_ASM	don't use ASM speedups when replacing system memcpy
 #			and/or memset routines
+# -DEXITFUN=_exit	define the exit function (exit or _exit) Default
+#			is exit. See exit(3), atexit(3) and _exit(2).
 # -DCTYPE_SUPPORT=x	where x is one of the following
 #
 #				1 - use plain-jane ctype.h which is only valid
@@ -64,9 +69,9 @@
 #	settings and you could have a problem if you attempt to use the file
 #	in a compile session that doesn't include these flags.
 #
-CFLAGS=-g
+CFLAGS=-g -O -DEXITFUN=_exit
 #
-# Where the code will be installed
+# Where the code will be installed. The subdirectories should exist.
 #
 #	DESTDIR		root for installation directory
 #	INSTDIR 	installation directory
@@ -78,7 +83,7 @@ CFLAGS=-g
 #			source and malloc.man for pre-formatted)
 #
 DESTDIR=
-INSTDIR=$(DESTDIR)/usr/local
+INSTDIR=$(DESTDIR)/usr
 LIBINSTDIR=$(INSTDIR)/lib
 INCINSTDIR=$(INSTDIR)/debug_include
 MANINSTDIR=$(INSTDIR)/man/man3
@@ -218,11 +223,12 @@ runtests: tests
 	./Runtests
 
 clean:  
-	rm -f $(TESTS) pgm cctest $(LIB) *.o *.ln Runtests.out malloc.h \
-		sysdefs.h
+	rm -f $(TESTS) pgm cctest $(LIB) *.o *.ln Runtests.out
+#	rm -f malloc.h sysdefs.h
 
-fullclean: clean
-	rm -f .configure .configure.[sO] *.O core cscope.out tags
+#fullclean: clean
+#	rm -f .configure .configure.[sO] *.O core cscope.out tags
+#	rm -f malloc.h sysdefs.h *~
 
 sharfile: $(SRCFILES) CHECKSUMS
 	$(SHARCMD)
@@ -247,11 +253,11 @@ $(LIB): $(LIBOBJS)
 $(LINTLIB): $(LIBSRCS)
 	$(LINT) -x -v -o dbmal $(LIBSRCS)
 
-malloc.h: malloc.h.org Configure
-	./Configure 
+#malloc.h: malloc.h.org Configure
+#	./Configure 
 
-sysdefs.h: Configure
-	./Configure 
+#sysdefs.h: Configure
+#	./Configure 
 
 #
 # stuff for building the nroffed version of the manual page
