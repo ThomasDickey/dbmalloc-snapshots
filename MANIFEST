@@ -1,0 +1,33 @@
+MANIFEST for dbmalloc, version t19920822
+--------------------------------------------------------------------------------
+MANIFEST                        this file
+Buildpatch                      Shell to build patch file
+Config.flags                    Auto config compiler flags
+Configure                       Automatic configuration script
+Makefile                        makefile for dbmalloc
+Runtests                        Automatic test script
+abort.c                         malloc_abort support
+calloc.c                        calloc and related functions
+cctest.c                        Module used by Configure
+datamc.c                        Efficient, portable memcpy routine
+datams.c                        Efficient, portable memset routine
+debug.h                         debugging output header
+dump.c                          malloc chain dumper
+free.c                          free and related functions
+leak.c                          memory leak detection stuff
+m_init.c                        malloclib initializations
+m_perror.c                      malloc error printer
+malign.c                        memory alignment routines
+malloc.3                        malloc man page ([nt]roff source)
+malloc.h.org                    include file for programs using the library
+mallopt.c                       mallopt and related stuff
+mchain.c                        chain checking modules
+mcheck.c                        error checking modules
+memory.c                        mem* and b* functions
+size.c                          malloc_size module
+stack.c                         Stack maintenance functions
+string.c                        str* functions
+tostring.c                      numeric to string converter
+tostring.h                      header for numeric converter
+xheap.c                         Xt heap stuff (for X11R5 compatibility)
+xmalloc.c                       Xt allocation functions
