@@ -1,3 +1,7 @@
+1992-09-03  cpcahil
+
+	* CHANGES, malloc.c, mallocin.h, realloc.c: FROM_KEYS
+
 1992-08-22  cpcahil
 
 	* Config.flags, Configure, Makefile, Runtests, abort.c, calloc.c, cctest.c, datamc.c, datams.c, debug.h, dump.c, free.c, leak.c, m_init.c, m_perror.c, malign.c, malloc.3, malloc.h.org, mallopt.c, mchain.c, mcheck.c, memory.c, size.c, stack.c, string.c, tostring.c, tostring.h, xheap.c, xmalloc.c:
