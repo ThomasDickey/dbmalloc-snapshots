@@ -11,14 +11,22 @@
  *		* this copyright notice is not modified or removed from any
  *		  source file
  *
- * modified by T.Dickey (dickey@clark.net) 1995/11/19 to add test for b*
- *		functions, and to make some tests work properly with gcc 2.7.0
+ * modified by Thomas E. Dickey:
+ * 2003/12/24	to make 'main()' definition consistent, to avoid compiler
+ *		warnings which would confuse test results.
+ * 1995/11/19	to add test for b* functions, and to make some tests work
+ *		properly with gcc 2.7.0
  */
 #if __STDC__ || __cplusplus
 # define __stdcargs(s) s
+# define MAIN() int main(int argc, char *argv[])
 #else
 # define __stdcargs(s) ()
+# define MAIN() int main(argc,argv) int argc; char * argv[];
 #endif
+
+#include <sys/types.h>
+#include <stdio.h>
 
 #ifdef USE_STDLIB
 #include <stdlib.h>
@@ -41,7 +49,7 @@
 
 
 /*
- * $Id: cctest.c,v 1.13 1995/11/19 21:02:34 tom Exp $
+ * $Id: cctest.c,v 1.14 2003/12/24 15:20:40 tom Exp $
  */
 /*
  * This file is not a real source file for the malloc library.  The
@@ -74,14 +82,8 @@
 #if __cplusplus
 	}
 #endif
-#if __cplusplus || __STDC__
-#include <stdio.h>
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
-#endif
+
+MAIN()
 {
 
 	/*
@@ -100,14 +102,7 @@ main(argc,argv)
 /*
  * determine if setenv is supported
  */
-#if __cplusplus || __STDC__
-#include <stdio.h>
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
-#endif
+MAIN()
 {
 #ifdef setenv
 #undef setenv
@@ -141,13 +136,7 @@ main(argc,argv)
 /*
  * determine if certain headers are available
  */
-#if __cplusplus || __STDC__
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
-#endif
+MAIN()
 {
 	/*
 	 * this bogus stuff is here simply to get c++ to shut-up about
@@ -165,14 +154,7 @@ main(argc,argv)
 /*
  * test requirement for underscores in external symbols
  */
-#if __cplusplus || __STDC__
-#include <stdio.h>
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
-#endif
+MAIN()
 {
 	int	  myroutine();
 
@@ -199,14 +181,7 @@ main(argc,argv)
 /*
  * test requirement for underscores in external symbols
  */
-#if __cplusplus || __STDC__
-#include <stdio.h>
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
-#endif
+MAIN()
 {
 	int	  myroutine();
 
@@ -270,7 +245,6 @@ malloc( size)
 #ifdef FREE_COMPILETEST
 
 #if __cplusplus
-#include <stdio.h>
 FREETYPE free( DATATYPE *data)
 #else
 FREETYPE
@@ -395,14 +369,7 @@ write(fd,buf,size)
  * this is used by the Configure script to get the compiler pre-defined symbol
  * for this
  */
-#if __cplusplus
-#include <stdio.h>
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
-#endif
+MAIN()
 {
 	int	  varcnt = 0;
 
@@ -497,15 +464,11 @@ main(argc,argv)
 
 #ifdef CHANGESTR
 
-#include <stdio.h>
-
 #define FILEBUFSIZE	(50*1024)
 
 char iobuffer[FILEBUFSIZE];
 
-main(argc,argv)
-	int		  argc;
-	char		* argv[];
+MAIN()
 {
 	unsigned int	  cnt;
 	FILE		* fp;
@@ -588,11 +551,7 @@ main(argc,argv)
 
 #ifdef TESTDATAMC
 
-#include <stdio.h>
-
-main(argc,argv)
-	int		  argc;
-	char		* argv[];
+MAIN()
 {
 	char		  buffer[30];
 
@@ -632,11 +591,7 @@ memcpy()
 #endif /* TESTDATAMC */
 
 #ifdef TESTDATAMS
-#include <stdio.h>
-
-main(argc,argv)
-	int		  argc;
-	char		* argv[];
+MAIN()
 {
 	char		  buffer[30];
 
@@ -657,6 +612,7 @@ main(argc,argv)
 	DataMS(buffer+4,'y',3);
 
 	printf("%s\n",buffer);
+	return 0;
 }
 
 memset()
@@ -669,17 +625,13 @@ memset()
 
 #ifdef COMPARETEST 
 
-#include <stdio.h>
 #include <string.h>
 
-#if __cplusplus
+#if __cplusplus || __STDC__
 #include <stdlib.h>
-main(int argc, char *argv[])
-#else
-main(argc,argv)
-	int	  argc;
-	char	* argv[];
 #endif
+
+MAIN()
 {
 	char		  buffer[10];
 	char		  buf2[10];
@@ -715,7 +667,7 @@ main(argc,argv)
 	{
 		exit(1);
 	}
-
+	return 0;
 }
 	
 

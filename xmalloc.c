@@ -12,7 +12,7 @@
  *		  source file
  */
 #ifndef lint
-static char rcs_hdr[] = "$Id: xmalloc.c,v 1.7 1992/08/22 16:27:13 cpcahil Exp $";
+static char rcs_hdr[] = "$Id: xmalloc.c,v 1.8 2003/12/24 02:11:07 tom Exp $";
 #endif
 
 /* $XConsortium: Alloc.c,v 1.46 91/07/30 11:04:41 rws Exp $ */
@@ -59,7 +59,7 @@ void _XtAllocError(type)
 
     if (type == NULL) type = "local memory allocation";
     XtErrorMsg("allocError", type, XtCXtToolkitError,
-	       "Cannot perform %s", &type, &num_params);
+	       "Cannot perform %s", (char **)&type, &num_params);
 }
 
 void
