@@ -1,3 +1,13 @@
+1993-02-26  dunkel
+
+	* stack.c: use EXITFUN instead of exit
+
+	* mallocin.h: added definition for EXITFUN
+
+	* malloc.c, dump.c: use EXITFUN instead of exit
+
+	* malloc.h, sysdefs.h: RCS_BASE
+
 1993-02-25  dunkel
 
 	* memory.c, dgmalloc.c, prototypes.h:

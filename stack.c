@@ -19,7 +19,7 @@
 #define STACK_ALLOC	100 /* allocate 100 elements at a time */
 #ifndef lint
 static
-char rcs_hdr[] = "$Id: stack.c,v 1.7 1992/08/22 16:27:13 cpcahil Exp $";
+char rcs_hdr[] = "$Id: stack.c,v 1.8 1993/02/26 15:08:17 dunkel Exp $";
 #endif
 
 #define OUTBUFSIZE	128
@@ -29,7 +29,7 @@ char rcs_hdr[] = "$Id: stack.c,v 1.7 1992/08/22 16:27:13 cpcahil Exp $";
 				{ \
 					VOIDCAST write(2,ERRSTR,\
 						     (WRTSIZE)strlen(ERRSTR));\
-					exit(120); \
+					EXITFUN(120); \
 				}
 
 #define COPY(s,t,buf,len)	while( (*(s) = *((t)++) ) \
