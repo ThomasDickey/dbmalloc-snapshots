@@ -1,3 +1,9 @@
+1993-03-01  dunkel
+
+	* Makefile: Harald Dunkel's quick-fix
+
+	* ANNOUNCE, README.Linux: RCS_BASE
+
 1993-02-26  dunkel
 
 	* stack.c: use EXITFUN instead of exit
