@@ -1,3 +1,7 @@
+1995-03-11  Thomas E. Dickey  <dickey@clark.net>
+
+	* prototypes.h: regen'd from 14L version after fixing cproto rules
+
 1993-03-01  dunkel
 
 	* Makefile: Harald Dunkel's quick-fix
